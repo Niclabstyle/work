@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@nic.labstyle | Tutorías Virtuales de Química</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (únicamente íconos minimalistas de interfaz) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        cream: '#FAF6F2',
+                        sand: '#EFE7DF',
+                        rosebeige: '#E6D7CC',
+                        terracotta: '#B88B74',
+                        taupe: '#8C6D5E',
+                        espresso: '#3D2E27',
+                        warmborder: '#DFD3C8'
+                    },
+                    boxShadow: {
+                        'pill': '0 4px 18px -2px rgba(61, 46, 39, 0.05), 0 1px 3px 0 rgba(61, 46, 39, 0.03)',
+                        'pill-hover': '0 10px 24px -5px rgba(61, 46, 39, 0.11), 0 4px 10px -2px rgba(61, 46, 39, 0.04)',
+                        'featured': '0 20px 36px -12px rgba(61, 46, 39, 0.22)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAF6F2;
+            background-image: 
+                radial-gradient(at 10% 6%, rgba(239, 231, 223, 0.92) 0px, transparent 55%),
+                radial-gradient(at 90% 14%, rgba(230, 215, 204, 0.72) 0px, transparent 52%),
+                radial-gradient(at 50% 95%, rgba(239, 231, 223, 0.95) 0px, transparent 60%);
+            color: #3D2E27;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Micro-interacción suave estilo Bio-Link / Linktree */
+        .linktree-btn {
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.22s ease, background-color 0.22s ease;
+        }
+        .linktree-btn:hover {
+            transform: scale(1.015);
+        }
+        .linktree-btn:active {
+            transform: scale(0.985);
+        }
+
+        /* Animación de entrada para modales */
+        @keyframes sheetUp {
+            from { opacity: 0; transform: translateY(18px) scale(0.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-animate {
+            animation: sheetUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Ocultar barra de desplazamiento en selector horizontal de días */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between py-9 px-4 sm:px-5 selection:bg-[#E6D7CC] selection:text-[#3D2E27]">
+
+    <!-- Toast de Notificación Minimalista -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[70] pointer-events-none opacity-0 -translate-y-4 transition-all duration-300 w-[92%] max-w-[390px]">
+        <div class="bg-[#3D2E27] text-[#FAF6F2] px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 border border-[#59453B]">
+            <div class="w-7 h-7 rounded-full bg-[#B88B74]/30 text-[#E6D7CC] flex items-center justify-center shrink-0">
+                <i data-lucide="check" class="w-4 h-4"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+                <p id="toast-title" class="text-xs font-bold text-white truncate">Listo</p>
+                <p id="toast-msg" class="text-[11px] text-[#E6D7CC] truncate">Acción completada.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL VERTICAL ESTILO BIO-LINK (max-width: 440px centrado) -->
+    <main class="w-full max-w-[440px] mx-auto flex flex-col items-center">
+
+        <!-- ===================================================================== -->
+        <!-- 1. CABECERA EDITORIAL (AVATAR 104PX + @nic.labstyle + INSTAGRAM ÚNICO)  -->
+        <!-- ===================================================================== -->
+        <header class="w-full flex flex-col items-center text-center mb-6">
+            <!-- Marco Fotográfico Circular Superior (104px) -->
+            <div class="relative mb-3.5 group">
+                <div class="w-[104px] h-[104px] rounded-full p-1 bg-gradient-to-tr from-[#B88B74] via-[#E6D7CC] to-[#8C6D5E] shadow-md">
+                    <div class="w-full h-full rounded-full bg-[#EFE7DF] overflow-hidden flex items-center justify-center relative">
+                        <!-- Imagen real de perfil -->
+                        <img id="profile-avatar-img" src="WhatsApp Image 2026-11-15 at 3.46.28 PM.jpeg" alt="@nic.labstyle" class="w-full h-full object-cover object-center" onerror="handleMissingAvatar()">
+
+                        <!-- Fallback limpio con botón 'Subir / fijar foto' si en preview no carga la ruta local -->
+                        <div id="profile-avatar-placeholder" class="hidden w-full h-full bg-[#EFE7DF] flex flex-col items-center justify-center p-2 text-center">
+                            <label class="inline-flex flex-col items-center justify-center gap-1 px-2 py-1.5 rounded-xl bg-[#3D2E27] text-[#FAF6F2] text-[10px] font-semibold cursor-pointer hover:bg-[#523E35] transition-colors shadow-xs leading-tight">
+                                <i data-lucide="camera" class="w-3.5 h-3.5 text-[#E6D7CC]"></i>
+                                <span>Subir / fijar foto</span>
+                                <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'avatar')">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón sutil en la esquina para fijar o actualizar foto en cualquier momento -->
+                <label title="Subir / fijar foto de perfil" class="absolute -bottom-0.5 -right-1 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#FAF6F2] hover:bg-[#EFE7DF] text-[#3D2E27] shadow-sm border border-[#DFD3C8] cursor-pointer transition-colors text-[10px] font-semibold">
+                    <i data-lucide="camera" class="w-3 h-3 text-[#8C6D5E]"></i>
+                    <span id="avatar-btn-text" class="hidden sm:inline">Fijar</span>
+                    <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'avatar')">
+                </label>
+            </div>
+
+            <!-- Handle / Usuario -->
+            <div class="flex items-center justify-center gap-1.5 mb-1">
+                <h1 class="font-serif font-bold text-2xl tracking-tight text-[#3D2E27]">@nic.labstyle</h1>
+                <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#B88B74] text-white" title="Tutora Verificada">
+                    <i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i>
+                </span>
+            </div>
+
+            <!-- Biografía concisa -->
+            <p class="text-[13px] text-[#8C6D5E] font-medium leading-relaxed max-w-[380px] px-2">
+                Tutorías Virtuales de Química • Orgánica, Analítica (IR y UV-Vis), General e ICFES Saber 11
+            </p>
+
+            <!-- Única Red Social: Instagram @nic.labstyle -->
+            <div class="mt-3.5">
+                <a href="https://www.instagram.com/nic.labstyle" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFFDFB] hover:bg-[#EFE7DF] border border-[#DFD3C8] text-xs font-semibold text-[#3D2E27] shadow-xs transition-all">
+                    <i data-lucide="instagram" class="w-3.5 h-3.5 text-[#B88B74]"></i>
+                    <span>@nic.labstyle</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- ===================================================================== -->
+        <!-- 2. TARJETA DESTACADA PRINCIPAL ('FEATURED LINK' CON FOTO DE PORTADA)  -->
+        <!-- ===================================================================== -->
+        <section class="w-full mb-4">
+            <div class="linktree-btn w-full rounded-3xl overflow-hidden shadow-featured relative group border border-[#DFD3C8] bg-[#EFE7DF]">
+                <div class="relative aspect-[16/10] w-full bg-[#E6D7CC] overflow-hidden">
+                    <!-- Segunda foto real de la tutora -->
+                    <img id="featured-cover-img" src="WhatsApp Image 2026-11-15 at 3.46.27 PM.jpeg" alt="Tutorías Virtuales de Química @nic.labstyle" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" onerror="handleMissingCover()">
+
+                    <!-- Fallback fotográfico cálido sin dibujos si la foto local aún no carga -->
+                    <div id="featured-cover-placeholder" class="hidden w-full h-full bg-gradient-to-br from-[#EFE7DF] via-[#E6D7CC] to-[#D4BCAE] flex flex-col items-center justify-center p-6 text-center">
+                        <p class="font-serif font-bold text-base text-[#3D2E27]">Portada de estudio @nic.labstyle</p>
+                        <p class="text-[11px] text-[#6E564B] mt-1 max-w-[260px]">Toca el botón superior "Subir / fijar portada" para dejar fija tu fotografía.</p>
+                    </div>
+
+                    <!-- Degradado cálido inferior -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#291E19]/95 via-[#3D2E27]/40 to-transparent pointer-events-none"></div>
+
+                    <!-- Badge superior izquierdo: Modalidad Virtual -->
+                    <div class="absolute top-3.5 left-3.5 flex items-center gap-1.5 bg-[#FAF6F2]/92 backdrop-blur-md border border-[#DFD3C8] text-[#3D2E27] text-[11px] font-semibold px-3 py-1 rounded-full shadow-xs pointer-events-none">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#B88B74]"></span>
+                        <span>100% Virtual • Google Meet</span>
+                    </div>
+
+                    <!-- Botón sutil 'Subir / fijar portada' -->
+                    <label title="Subir / fijar foto de portada" class="absolute top-3.5 right-3.5 z-10 inline-flex items-center gap-1.5 bg-[#FAF6F2]/92 hover:bg-[#FAF6F2] backdrop-blur-md border border-[#DFD3C8] text-[#3D2E27] text-[11px] font-semibold px-3 py-1 rounded-full shadow-xs cursor-pointer transition-colors">
+                        <i data-lucide="camera" class="w-3 h-3 text-[#8C6D5E]"></i>
+                        <span id="cover-btn-text">Subir / fijar portada</span>
+                        <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'cover')">
+                    </label>
+
+                    <!-- Área clicable principal para abrir calendario -->
+                    <button type="button" onclick="openModal('booking-modal')" class="absolute inset-0 w-full h-full text-left flex flex-col justify-end p-4 sm:p-5 cursor-pointer focus:outline-none">
+                        <div class="flex items-end justify-between gap-3">
+                            <div>
+                                <h2 class="font-serif font-bold text-lg sm:text-[19px] text-[#FAF6F2] leading-snug">
+                                    Agenda tu tutoría virtual de Química
+                                </h2>
+                                <p class="text-xs text-[#EFE7DF] mt-1">
+                                    Horarios disponibles en tiempo real • Desde <span class="font-semibold text-[#E6D7CC]">$30.000 COP / hora</span>
+                                </p>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-[#FAF6F2] text-[#3D2E27] flex items-center justify-center shrink-0 shadow-md group-hover:bg-[#B88B74] group-hover:text-white transition-colors">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 stroke-[2.5]"></i>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- 3. BOTONES Y TARJETAS INTERACTIVAS ESTILO LINKTREE                    -->
+        <!-- ===================================================================== -->
+        <section class="w-full space-y-3.5">
+
+            <!-- Botón 1: Agendar Hora en Google Calendar -->
+            <button type="button" onclick="openModal('booking-modal')" class="linktree-btn w-full bg-[#B88B74] hover:bg-[#A67962] text-[#FAF6F2] border border-[#A67962] rounded-2xl p-3.5 shadow-pill hover:shadow-pill-hover flex items-center justify-between gap-3 cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-[#FAF6F2]/18 text-[#FAF6F2] flex items-center justify-center shrink-0">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 text-center min-w-0">
+                    <span class="block font-bold text-sm text-white truncate">
+                        Agendar clase en Google Calendar
+                    </span>
+                    <span class="block text-[11px] text-[#FAF6F2]/90 truncate">
+                        Elige materia, fecha y tu bloque libre de 1 hora
+                    </span>
+                </div>
+                <div class="w-8 h-8 rounded-full text-[#FAF6F2]/90 flex items-center justify-center shrink-0">
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </div>
+            </button>
+
+            <!-- Botón 2: Pagar con Nu Colombia (Llave Bre-B @bca414) -->
+            <button type="button" onclick="openModal('payment-modal')" class="linktree-btn w-full bg-[#FFFDFB] hover:bg-[#EFE7DF]/75 border border-[#DFD3C8] rounded-2xl p-3.5 shadow-pill hover:shadow-pill-hover flex items-center justify-between gap-3 cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-[#EFE7DF] border border-[#DFD3C8] text-[#8C6D5E] flex items-center justify-center shrink-0 font-serif font-bold text-sm">
+                    Nu
+                </div>
+                <div class="flex-1 text-center min-w-0">
+                    <span class="block font-bold text-sm text-[#3D2E27] truncate">
+                        Pagar tutoría • Nu Colombia (<span class="js-nu-key-label">@bca414</span>)
+                    </span>
+                    <span class="block text-[11px] text-[#8C6D5E] truncate">
+                        Llave Bre-B sin comisión desde cualquier banco
+                    </span>
+                </div>
+                <div class="w-8 h-8 rounded-full text-[#8C6D5E] flex items-center justify-center shrink-0">
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </div>
+            </button>
+
+            <!-- Tarjeta Desplegable 3: Oferta Académica y Tarifas por Hora (COP) -->
+            <div class="w-full bg-[#FFFDFB] border border-[#DFD3C8] rounded-2xl shadow-pill overflow-hidden">
+                <button type="button" onclick="toggleAccordion('subjects-content', 'subjects-chevron')" class="linktree-btn w-full p-3.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#EFE7DF]/60">
+                    <div class="w-10 h-10 rounded-xl bg-[#EFE7DF] border border-[#DFD3C8] text-[#B88B74] flex items-center justify-center shrink-0">
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1 text-center min-w-0">
+                        <span class="block font-bold text-sm text-[#3D2E27] truncate">
+                            Materias y Tarifas por Hora (COP)
+                        </span>
+                        <span class="block text-[11px] text-[#8C6D5E] truncate">
+                            Orgánica, Analítica (IR y UV-Vis), General e ICFES
+                        </span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full text-[#8C6D5E] flex items-center justify-center shrink-0">
+                        <i id="subjects-chevron" data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200"></i>
+                    </div>
+                </button>
+
+                <!-- Listado detallado de las 4 materias y tarifas -->
+                <div id="subjects-content" class="hidden px-4 pb-4 pt-2 border-t border-[#EFE7DF] bg-[#FAF6F2] text-left space-y-2.5">
+                    <!-- 1. Química Orgánica ($40.000 COP / hora) -->
+                    <div class="bg-[#FFFDFB] p-3 rounded-xl border border-[#B88B74]/50">
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="text-xs font-bold text-[#3D2E27]">Química Orgánica</p>
+                            <span class="shrink-0 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#B88B74] text-white">$40.000 COP / h</span>
+                        </div>
+                        <p class="text-[11px] text-[#6E564B] mt-1 leading-relaxed">
+                            Grupos funcionales, nomenclatura, reacciones fundamentales y mecanismos básicos.
+                        </p>
+                    </div>
+
+                    <!-- 2. Química Analítica y Lectura de Espectros ($35.000 COP / hora) -->
+                    <div class="bg-[#FFFDFB] p-3 rounded-xl border border-[#DFD3C8]">
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="text-xs font-bold text-[#3D2E27]">Química Analítica y Espectros (IR y UV-Vis)</p>
+                            <span class="shrink-0 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#E6D7CC] text-[#3D2E27]">$35.000 COP / h</span>
+                        </div>
+                        <p class="text-[11px] text-[#6E564B] mt-1 leading-relaxed">
+                            Lectura e interpretación de espectros IR y UV-Vis, equilibrio químico, titulaciones y análisis cuantitativo.
+                        </p>
+                    </div>
+
+                    <!-- 3. Química General y Estequiometría ($30.000 COP / hora) -->
+                    <div class="bg-[#FFFDFB] p-3 rounded-xl border border-[#DFD3C8]">
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="text-xs font-bold text-[#3D2E27]">Química General y Estequiometría</p>
+                            <span class="shrink-0 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EFE7DF] text-[#3D2E27]">$30.000 COP / h</span>
+                        </div>
+                        <p class="text-[11px] text-[#6E564B] mt-1 leading-relaxed">
+                            Soluciones, pH, gases ideales, reactivo límite, concentraciones y balanceo de reacciones.
+                        </p>
+                    </div>
+
+                    <!-- 4. Preparación ICFES Saber 11 ($30.000 COP / hora) -->
+                    <div class="bg-[#FFFDFB] p-3 rounded-xl border border-[#DFD3C8]">
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="text-xs font-bold text-[#3D2E27]">Preparación ICFES Saber 11</p>
+                            <span class="shrink-0 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EFE7DF] text-[#3D2E27]">$30.000 COP / h</span>
+                        </div>
+                        <p class="text-[11px] text-[#6E564B] mt-1 leading-relaxed">
+                            Entrenamiento práctico en Química y Ciencias Naturales tipo prueba Saber 11 y análisis de gráficas.
+                        </p>
+                    </div>
+
+                    <button type="button" onclick="openModal('booking-modal')" class="w-full py-2.5 rounded-xl bg-[#3D2E27] hover:bg-[#523E35] text-[#FAF6F2] text-xs font-semibold transition-colors cursor-pointer">
+                        Elegir materia y agendar hora
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tarjeta Desplegable 4: Horarios disponibles esta semana -->
+            <div class="w-full bg-[#FFFDFB] border border-[#DFD3C8] rounded-2xl shadow-pill overflow-hidden">
+                <button type="button" onclick="toggleAccordion('weekly-schedule-content', 'weekly-chevron')" class="linktree-btn w-full p-3.5 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#EFE7DF]/60">
+                    <div class="w-10 h-10 rounded-xl bg-[#EFE7DF] border border-[#DFD3C8] text-[#8C6D5E] flex items-center justify-center shrink-0">
+                        <i data-lucide="clock" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1 text-center min-w-0">
+                        <span class="block font-bold text-sm text-[#3D2E27] truncate">
+                            Ver mis horarios libres de la semana
+                        </span>
+                        <span class="block text-[11px] text-[#8C6D5E] truncate">
+                            Sincronizados con mi calendario académico
+                        </span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full text-[#8C6D5E] flex items-center justify-center shrink-0">
+                        <i id="weekly-chevron" data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200"></i>
+                    </div>
+                </button>
+
+                <div id="weekly-schedule-content" class="hidden px-4 pb-4 pt-2 border-t border-[#EFE7DF] bg-[#FAF6F2] text-left">
+                    <p class="text-[11px] text-[#8C6D5E] mb-2.5">
+                        Toca cualquier hora disponible para agendarla directamente:
+                    </p>
+                    <div id="weekly-overview-list" class="space-y-2">
+                        <!-- Renderizado dinámicamente desde la disponibilidad real -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón 5: Contacto y Comprobantes por Instagram @nic.labstyle -->
+            <a href="https://www.instagram.com/nic.labstyle" target="_blank" rel="noopener noreferrer" class="linktree-btn w-full bg-[#FFFDFB] hover:bg-[#EFE7DF]/75 border border-[#DFD3C8] rounded-2xl p-3.5 shadow-pill hover:shadow-pill-hover flex items-center justify-between gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#EFE7DF] border border-[#DFD3C8] text-[#B88B74] flex items-center justify-center shrink-0">
+                    <i data-lucide="instagram" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 text-center min-w-0">
+                    <span class="block font-bold text-sm text-[#3D2E27] truncate">
+                        Enviar comprobante a @nic.labstyle
+                    </span>
+                    <span class="block text-[11px] text-[#8C6D5E] truncate">
+                        Confirma tu transferencia Nu o consulta tus dudas por DM
+                    </span>
+                </div>
+                <div class="w-8 h-8 rounded-full text-[#8C6D5E] flex items-center justify-center shrink-0">
+                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                </div>
+            </a>
+
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- 4. PANEL DISCRETO EN EL PIE DE PÁGINA (ACORDEÓN DE CONFIGURACIÓN)      -->
+        <!-- ===================================================================== -->
+        <footer class="w-full mt-9 pt-3 flex flex-col items-center">
+            <div class="w-full bg-[#FFFDFB]/85 border border-[#DFD3C8] rounded-2xl overflow-hidden">
+                <button type="button" onclick="toggleAccordion('owner-panel-content', 'owner-chevron')" class="w-full px-4 py-2.5 flex items-center justify-between gap-2 text-[11px] font-semibold text-[#8C6D5E] hover:text-[#3D2E27] hover:bg-[#EFE7DF]/50 transition-colors cursor-pointer">
+                    <span class="inline-flex items-center gap-1.5">
+                        <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+                        <span>Personalizar fotos, llave Nu y exportar HTML</span>
+                    </span>
+                    <i id="owner-chevron" data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform duration-200"></i>
+                </button>
+
+                <div id="owner-panel-content" class="hidden px-4 pb-4 pt-3 border-t border-[#EFE7DF] bg-[#FAF6F2] text-left space-y-3.5 text-xs">
+                    <!-- Subir / fijar las 2 fotografías reales -->
+                    <div class="bg-[#FFFDFB] p-3 rounded-xl border border-[#DFD3C8] space-y-2">
+                        <p class="font-bold text-[#3D2E27] text-[11px]">Fijar tus 2 fotografías reales</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="w-full py-2 px-2.5 rounded-xl bg-[#EFE7DF] hover:bg-[#E6D7CC] text-[#3D2E27] font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors text-[11px]">
+                                <i data-lucide="camera" class="w-3.5 h-3.5 text-[#8C6D5E]"></i>
+                                <span>Subir / fijar foto</span>
+                                <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'avatar')">
+                            </label>
+                            <label class="w-full py-2 px-2.5 rounded-xl bg-[#EFE7DF] hover:bg-[#E6D7CC] text-[#3D2E27] font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-colors text-[11px]">
+                                <i data-lucide="image" class="w-3.5 h-3.5 text-[#8C6D5E]"></i>
+                                <span>Subir / fijar portada</span>
+                                <input type="file" accept="image/*" class="hidden" onchange="handleImageUpload(event, 'cover')">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Editar Llave Bre-B Nu Colombia y Correo Google Calendar -->
+                    <form id="settings-form" class="space-y-2.5">
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#3D2E27] mb-1">Llave Bre-B Nu Colombia</label>
+                            <input type="text" id="set-nukey" value="@bca414" placeholder="@bca414" class="w-full bg-[#FFFDFB] border border-[#DFD3C8] rounded-xl px-3 py-2 text-xs text-[#3D2E27] font-semibold outline-none focus:border-[#B88B74]">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-[#3D2E27] mb-1">Correo Google Calendar</label>
+                            <input type="email" id="set-email" value="brillythnicol3@gmail.com" class="w-full bg-[#FFFDFB] border border-[#DFD3C8] rounded-xl px-3 py-2 text-xs text-[#3D2E27] outline-none focus:border-[#B88B74]">
+                        </div>
+                        <div class="flex items-center justify-between gap-2 pt-1">
+                            <button type="button" onclick="resetSettings()" class="text-[11px] text-[#8C6D5E] hover:text-[#3D2E27] font-semibold px-2 py-1.5 cursor-pointer">
+                                Restaurar
+                            </button>
+                            <button type="submit" class="px-4 py-2 rounded-xl bg-[#3D2E27] hover:bg-[#523E35] text-[#FAF6F2] text-[11px] font-bold cursor-pointer">
+                                Guardar cambios
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Botón de Exportar HTML listo para Netlify / Vercel -->
+                    <div class="bg-[#EFE7DF] p-3 rounded-xl border border-[#DFD3C8] space-y-2">
+                        <p class="text-[11px] text-[#59453B] leading-relaxed">
+                            Descarga tu archivo <strong>index.html</strong> autónomo con tus fotos ya incrustadas para publicarlo gratis en Netlify o Vercel.
+                        </p>
+                        <button type="button" onclick="exportStandaloneHTML()" class="w-full py-2.5 px-3 rounded-xl bg-[#8C6D5E] hover:bg-[#755A4D] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            <span>Descargar página lista (.html)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-[11px] text-[#9E877B] font-medium mt-3">@nic.labstyle • Tutorías Virtuales de Química</p>
+        </footer>
+
+    </main>
+
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 1: AGENDAMIENTO SINCRONIZADO CON GOOGLE CALENDAR                -->
+    <!-- ===================================================================== -->
+    <div id="booking-modal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-[#291E19]/55 backdrop-blur-xs p-0 sm:p-4">
+        <div class="modal-animate bg-[#FAF6F2] w-full max-w-[440px] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-[#DFD3C8] max-h-[92vh] flex flex-col overflow-hidden">
+            <!-- Header del modal -->
+            <div class="px-5 py-4 bg-[#FFFDFB] border-b border-[#EFE7DF] flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-serif font-bold text-base text-[#3D2E27]">Agendar Tutoría Virtual</h3>
+                    <p class="text-[11px] text-[#8C6D5E]">Google Meet • Zona horaria Colombia (America/Bogota)</p>
+                </div>
+                <button type="button" onclick="closeModal('booking-modal')" class="w-8 h-8 rounded-full bg-[#EFE7DF] hover:bg-[#E6D7CC] text-[#3D2E27] flex items-center justify-center cursor-pointer">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Cuerpo scrolleable -->
+            <div class="p-5 overflow-y-auto space-y-5">
+                <!-- Paso 1: Materia y Tarifa por Hora -->
+                <div>
+                    <label class="block text-xs font-bold text-[#3D2E27] mb-2">1. Elige la materia (sesión de 1 hora)</label>
+                    <div id="booking-subjects-list" class="grid grid-cols-1 gap-2">
+                        <!-- Renderizado dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Paso 2: Selección de Día -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-xs font-bold text-[#3D2E27]">2. Selecciona el día</label>
+                        <span id="booking-month-label" class="text-[11px] font-semibold text-[#8C6D5E]"></span>
+                    </div>
+                    <div id="booking-dates-row" class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                        <!-- Días renderizados por JS -->
+                    </div>
+                </div>
+
+                <!-- Paso 3: Horas libres exactas -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-xs font-bold text-[#3D2E27]">3. Horas disponibles ese día</label>
+                        <span id="booking-slots-count" class="text-[10px] font-semibold text-[#8C6D5E]"></span>
+                    </div>
+                    <div id="booking-times-grid" class="grid grid-cols-3 gap-2">
+                        <!-- Horas renderizadas por JS -->
+                    </div>
+                </div>
+
+                <!-- Paso 4: Datos del Estudiante -->
+                <form id="booking-form" class="space-y-3 pt-3 border-t border-[#DFD3C8]">
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-[#3D2E27] mb-1">Tu nombre *</label>
+                            <input type="text" id="bk-name" required placeholder="Ej. Laura Gómez" class="w-full bg-[#FFFDFB] border border-[#DFD3C8] focus:border-[#B88B74] rounded-xl px-3 py-2.5 text-xs text-[#3D2E27] outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-[#3D2E27] mb-1">Tu Instagram *</label>
+                            <input type="text" id="bk-ig" required placeholder="@tu_usuario" class="w-full bg-[#FFFDFB] border border-[#DFD3C8] focus:border-[#B88B74] rounded-xl px-3 py-2.5 text-xs text-[#3D2E27] outline-none transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-[#3D2E27] mb-1">Tema específico a repasar *</label>
+                        <input type="text" id="bk-topic" required placeholder="Ej. Nomenclatura orgánica / Espectros IR / Estequiometría" class="w-full bg-[#FFFDFB] border border-[#DFD3C8] focus:border-[#B88B74] rounded-xl px-3.5 py-2.5 text-xs text-[#3D2E27] outline-none transition-colors">
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 px-4 rounded-2xl bg-[#3D2E27] hover:bg-[#523E35] text-[#FAF6F2] font-bold text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2 transition-all cursor-pointer mt-2">
+                        <i data-lucide="calendar-check" class="w-4 h-4 text-[#E6D7CC]"></i>
+                        <span>Confirmar en Google Calendar</span>
+                    </button>
+                </form>
+
+                <!-- Pantalla / Tarjeta Post-Reserva con Llave Nu Colombia @bca414 y botón Instagram -->
+                <div id="booking-success-panel" class="hidden bg-[#EFE7DF] border border-[#B88B74]/60 rounded-2xl p-4 space-y-3.5">
+                    <div class="flex items-start gap-2.5">
+                        <div class="w-7 h-7 rounded-full bg-[#8C6D5E] text-white flex items-center justify-center shrink-0 mt-0.5">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-[#3D2E27]">¡Cita abierta en Google Calendar!</p>
+                            <p id="bk-success-summary" class="text-[11px] text-[#6E564B] mt-0.5"></p>
+                        </div>
+                    </div>
+
+                    <!-- Reabrir enlace de Google Calendar por si el navegador bloqueó la ventana -->
+                    <a id="bk-gcal-link" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-2 px-3 rounded-xl bg-[#FFFDFB] border border-[#DFD3C8] hover:border-[#B88B74] text-[#3D2E27] font-semibold text-[11px] flex items-center justify-center gap-1.5">
+                        <i data-lucide="calendar" class="w-3.5 h-3.5 text-[#8C6D5E]"></i>
+                        <span>Abrir nuevamente evento en Google Calendar</span>
+                    </a>
+
+                    <!-- Bloque de pago inmediato con Nu Colombia Bre-B @bca414 -->
+                    <div class="bg-[#FFFDFB] border border-[#DFD3C8] rounded-xl p-3.5 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-[#3D2E27]">Pago directo Nu Colombia</span>
+                            <span id="bk-success-price" class="text-xs font-extrabold text-[#8C6D5E]">$40.000 COP</span>
+                        </div>
+                        <p class="text-[11px] text-[#6E564B] leading-relaxed">
+                            Llave Bre-B (<span class="font-semibold text-[#3D2E27]">$0 comisión</span> desde Nu, Nequi, Bancolombia, Davivienda o cualquier banco):
+                        </p>
+
+                        <button type="button" onclick="copyNuKey(this)" class="w-full py-3 px-4 rounded-xl bg-[#3D2E27] hover:bg-[#523E35] text-[#FAF6F2] font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs">
+                            <i data-lucide="copy" class="w-4 h-4 text-[#E6D7CC]"></i>
+                            <span class="js-copy-btn-label">Copiar llave @bca414</span>
+                        </button>
+
+                        <a href="https://www.instagram.com/nic.labstyle" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl bg-[#B88B74] hover:bg-[#A67962] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                            <span>Enviar comprobante a @nic.labstyle</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 2: PAGO PROTAGONISTA CON NU COLOMBIA (LLAVE BRE-B @bca414)      -->
+    <!-- ===================================================================== -->
+    <div id="payment-modal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-[#291E19]/55 backdrop-blur-xs p-0 sm:p-4">
+        <div class="modal-animate bg-[#FAF6F2] w-full max-w-[440px] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-[#DFD3C8] max-h-[92vh] flex flex-col overflow-hidden">
+            <div class="px-5 py-4 bg-[#FFFDFB] border-b border-[#EFE7DF] flex items-center justify-between shrink-0">
+                <div>
+                    <h3 class="font-serif font-bold text-base text-[#3D2E27]">Transferencia Nu Colombia</h3>
+                    <p class="text-[11px] text-[#8C6D5E]">Llave Bre-B • $0 comisión interbancaria</p>
+                </div>
+                <button type="button" onclick="closeModal('payment-modal')" class="w-8 h-8 rounded-full bg-[#EFE7DF] hover:bg-[#E6D7CC] text-[#3D2E27] flex items-center justify-center cursor-pointer">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div class="p-5 overflow-y-auto space-y-4">
+                <!-- Selector rápido de valor según la clase elegida -->
+                <div>
+                    <label class="block text-xs font-bold text-[#3D2E27] mb-1.5">Selecciona tu clase (1 hora virtual)</label>
+                    <select id="pay-subject-select" onchange="updatePaymentModalAmount()" class="w-full bg-[#FFFDFB] border border-[#DFD3C8] rounded-xl px-3.5 py-2.5 text-xs font-semibold text-[#3D2E27] outline-none focus:border-[#B88B74]">
+                        <!-- Opciones desde JS -->
+                    </select>
+                </div>
+
+                <!-- Tarjeta Protagonista Nu Colombia + Llave Bre-B @bca414 -->
+                <div class="bg-[#EFE7DF] border border-[#DFD3C8] rounded-2xl p-4 space-y-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#E6D7CC] text-[#3D2E27]">
+                                Entidad: Nu Colombia
+                            </span>
+                            <p id="pay-amount-display" class="font-serif font-bold text-2xl text-[#3D2E27] mt-1.5">$40.000 COP</p>
+                            <p class="text-[11px] text-[#6E564B] mt-0.5">
+                                Llave Bre-B — <strong>$0 comisión</strong> desde Nu, Nequi, Bancolombia, Davivienda o cualquier banco.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Caja destacada con la llave @bca414 -->
+                    <div class="bg-[#FFFDFB] border border-[#DFD3C8] rounded-xl p-3 flex items-center justify-between gap-2">
+                        <div>
+                            <span class="block text-[10px] font-semibold text-[#8C6D5E]">Llave Bre-B</span>
+                            <span class="font-serif font-bold text-xl text-[#3D2E27] tracking-tight js-nu-key-label">@bca414</span>
+                        </div>
+                        <span class="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-[#FAF6F2] border border-[#DFD3C8] text-[#8C6D5E]">
+                            Transferencia inmediata
+                        </span>
+                    </div>
+
+                    <!-- Botón táctil grande 'Copiar llave @bca414' -->
+                    <button type="button" onclick="copyNuKey(this)" class="w-full py-3.5 px-4 rounded-xl bg-[#3D2E27] hover:bg-[#523E35] text-[#FAF6F2] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm">
+                        <i data-lucide="copy" class="w-4 h-4 text-[#E6D7CC]"></i>
+                        <span class="js-copy-btn-label">Copiar llave @bca414</span>
+                    </button>
+                </div>
+
+                <!-- Paso 2: Enviar comprobante a @nic.labstyle en Instagram -->
+                <div class="bg-[#FFFDFB] border border-[#DFD3C8] rounded-2xl p-4 space-y-3">
+                    <p class="text-xs font-bold text-[#3D2E27]">Confirma tu cupo en Instagram</p>
+                    <p class="text-[11px] text-[#6E564B] leading-relaxed">
+                        Luego de realizar la transferencia a la llave <strong class="js-nu-key-label">@bca414</strong>, envíame el comprobante por mensaje directo a <strong>@nic.labstyle</strong> para confirmar tu clase virtual.
+                    </p>
+                    <div class="grid grid-cols-1 gap-2">
+                        <a href="https://www.instagram.com/nic.labstyle" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-xl bg-[#B88B74] hover:bg-[#A67962] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-xs">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                            <span>Enviar comprobante a @nic.labstyle</span>
+                        </a>
+                        <button type="button" onclick="copyReceiptSummaryText()" class="w-full py-2.5 px-3 rounded-xl bg-[#EFE7DF] hover:bg-[#E6D7CC] text-[#3D2E27] font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                            <i data-lucide="clipboard-check" class="w-3.5 h-3.5 text-[#8C6D5E]"></i>
+                            <span>Copiar resumen de mi reserva para el DM</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===================================================================== -->
+    <!-- LÓGICA JAVASCRIPT (FOTOS FIJAS, CALENDARIO REAL, NU BRE-B Y EXPORTAR) -->
+    <!-- ===================================================================== -->
+    <script>
+        const STORAGE_KEY = 'nic_labstyle_photos_v4';
+        const LEGACY_KEYS = ['nic_labstyle_calendar_v2', 'nic_labstyle_settings'];
+
+        // Oferta académica oficial y tarifas por hora (COP) - 100% Virtual por Google Meet
+        const TUTORING_SUBJECTS = [
+            {
+                id: 'organica',
+                name: 'Química Orgánica',
+                shortName: 'Química Orgánica',
+                description: 'Grupos funcionales, nomenclatura, reacciones fundamentales y mecanismos básicos.',
+                price: 40000
+            },
+            {
+                id: 'analitica',
+                name: 'Química Analítica y Lectura de Espectros (IR y UV-Vis)',
+                shortName: 'Química Analítica y Espectros (IR y UV-Vis)',
+                description: 'Lectura e interpretación de espectros IR y UV-Vis, equilibrio químico, titulaciones y análisis cuantitativo.',
+                price: 35000
+            },
+            {
+                id: 'general',
+                name: 'Química General y Estequiometría',
+                shortName: 'Química General y Estequiometría',
+                description: 'Soluciones, pH, gases ideales, reactivo límite, concentraciones y balanceo de reacciones.',
+                price: 30000
+            },
+            {
+                id: 'icfes',
+                name: 'Preparación ICFES Saber 11',
+                shortName: 'Preparación ICFES Saber 11',
+                description: 'Entrenamiento práctico en Química y Ciencias Naturales tipo prueba Saber 11 y análisis de gráficas.',
+                price: 30000
+            }
+        ];
+
+        // Bloques reales de 1 hora libres según horario académico y personal de la tutora:
+        // - Lunes: 07:00, 12:00, 13:00, 19:00 (y 17:00 en lunes sin exposición)
+        // - Martes: 07:00, 11:00, 16:30, 18:00, 19:30
+        // - Miércoles: 07:00, 12:30 (y 10:30, 16:30 en miércoles sin estudio adicional)
+        // - Jueves: 07:00, 12:00 (y 14:00, 18:30 en jueves sin estudio adicional)
+        // - Viernes: 07:00, 13:00, 16:30, 18:00
+        // - Sábado: 08:00, 09:30, 13:00, 17:30, 19:00
+        // - Domingo: 09:00, 10:30, 14:00, 16:00, 19:00
+        const SPECIFIC_DATE_SLOTS = {
+            '2026-11-16': ['07:00', '12:00', '13:00', '19:00'], // Lunes con exposición (sin 17:00)
+            '2026-11-18': ['07:00', '12:30'],                   // Miércoles con estudio adicional (sin 10:30 ni 16:30)
+            '2026-11-19': ['07:00', '12:00']                    // Jueves con estudio adicional (sin 14:00 ni 18:30)
+        };
+
+        const WEEKLY_RECURRING_SLOTS = {
+            1: ['07:00', '12:00', '13:00', '17:00', '19:00'], // Lunes regular (sin exposición)
+            2: ['07:00', '11:00', '16:30', '18:00', '19:30'], // Martes
+            3: ['07:00', '10:30', '12:30', '16:30'],          // Miércoles regular (sin estudio adicional)
+            4: ['07:00', '12:00', '14:00', '18:30'],          // Jueves regular (sin estudio adicional)
+            5: ['07:00', '13:00', '16:30', '18:00'],          // Viernes
+            6: ['08:00', '09:30', '13:00', '17:30', '19:00'], // Sábado
+            0: ['09:00', '10:30', '14:00', '16:00', '19:00']  // Domingo
+        };
+
+        const DEFAULT_SETTINGS = {
+            avatarUrl: 'WhatsApp Image 2026-11-15 at 3.46.28 PM.jpeg',
+            coverUrl: 'WhatsApp Image 2026-11-15 at 3.46.27 PM.jpeg',
+            nuKey: '@bca414',
+            email: 'brillythnicol3@gmail.com'
+        };
+
+        let settings = { ...DEFAULT_SETTINGS };
+        let selectedSubjectIndex = 0; // Por defecto Química Orgánica ($40.000 COP / h)
+        let selectedDateKey = '2026-11-16';
+        let selectedTime24 = '07:00';
+        let currentBooking = null;
+
+        // Utilidades de fecha en zona local (evita desfase UTC)
+        function toDateKey(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function parseDateKey(key) {
+            const [y, m, d] = key.split('-').map(Number);
+            return new Date(y, m - 1, d, 12, 0, 0);
+        }
+
+        function formatTime12h(time24) {
+            const [hStr, mStr] = time24.split(':');
+            const h = parseInt(hStr, 10);
+            const suffix = h >= 12 ? 'PM' : 'AM';
+            const h12 = h % 12 === 0 ? 12 : h % 12;
+            return `${String(h12).padStart(2, '0')}:${mStr} ${suffix}`;
+        }
+
+        function formatCOP(val) {
+            return new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                maximumFractionDigits: 0
+            }).format(val);
+        }
+
+        function getAvailableSlotsForDateKey(dateKey) {
+            if (SPECIFIC_DATE_SLOTS[dateKey]) {
+                return SPECIFIC_DATE_SLOTS[dateKey];
+            }
+            const dateObj = parseDateKey(dateKey);
+            return WEEKLY_RECURRING_SLOTS[dateObj.getDay()] || [];
+        }
+
+        // Genera los próximos 14 días desde el Lunes 16 de Noviembre de 2026
+        function getBookableDates() {
+            const start = new Date(2026, 10, 16, 12, 0, 0);
+            const dates = [];
+            for (let i = 0; i < 14; i++) {
+                const d = new Date(start);
+                d.setDate(start.getDate() + i);
+                dates.push(d);
+            }
+            return dates;
+        }
+
+        function showToast(title, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('opacity-0', '-translate-y-4');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-4');
+            }, 3400);
+        }
+
+        // Manejo limpio de fotos faltantes en preview
+        function handleMissingAvatar() {
+            document.getElementById('profile-avatar-img').classList.add('hidden');
+            document.getElementById('profile-avatar-placeholder').classList.remove('hidden');
+        }
+
+        function handleMissingCover() {
+            document.getElementById('featured-cover-img').classList.add('hidden');
+            document.getElementById('featured-cover-placeholder').classList.remove('hidden');
+        }
+
+        // Carga y compresión de fotografías para guardarlas fijas en localStorage ('nic_labstyle_photos_v4')
+        function handleImageUpload(event, target) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxDim = target === 'avatar' ? 640 : 1120;
+                    let w = img.width;
+                    let h = img.height;
+
+                    if (w > maxDim || h > maxDim) {
+                        if (w > h) {
+                            h = Math.round((h * maxDim) / w);
+                            w = maxDim;
+                        } else {
+                            w = Math.round((w * maxDim) / h);
+                            h = maxDim;
+                        }
+                    }
+
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+                    if (target === 'avatar') {
+                        settings.avatarUrl = dataUrl;
+                    } else {
+                        settings.coverUrl = dataUrl;
+                    }
+
+                    saveSettingsToStorage();
+                    applySettingsToDOM();
+                    showToast('Foto fijada', 'Tu fotografía quedó guardada permanentemente.');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveSettingsToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+            } catch (err) {
+                console.warn('Error al guardar en localStorage:', err);
+            }
+        }
+
+        function loadSettings() {
+            try {
+                // 1. Buscar primero en 'nic_labstyle_photos_v4'
+                let raw = localStorage.getItem(STORAGE_KEY);
+                // 2. Si no existe, migrar automáticamente fotos guardadas en claves anteriores
+                if (!raw) {
+                    for (const legacyKey of LEGACY_KEYS) {
+                        const legacyRaw = localStorage.getItem(legacyKey);
+                        if (legacyRaw) {
+                            const parsedLegacy = JSON.parse(legacyRaw);
+                            settings = {
+                                ...DEFAULT_SETTINGS,
+                                avatarUrl: parsedLegacy.avatarUrl || DEFAULT_SETTINGS.avatarUrl,
+                                coverUrl: parsedLegacy.coverUrl || DEFAULT_SETTINGS.coverUrl,
+                                email: parsedLegacy.email || DEFAULT_SETTINGS.email
+                            };
+                            saveSettingsToStorage();
+                            applySettingsToDOM();
+                            return;
+                        }
+                    }
+                } else {
+                    const parsed = JSON.parse(raw);
+                    settings = {
+                        ...DEFAULT_SETTINGS,
+                        ...parsed
+                    };
+                }
+            } catch (err) {
+                console.warn(err);
+            }
+            applySettingsToDOM();
+        }
+
+        function applySettingsToDOM() {
+            // Avatar
+            const avatarImg = document.getElementById('profile-avatar-img');
+            const avatarPlaceholder = document.getElementById('profile-avatar-placeholder');
+            if (settings.avatarUrl && settings.avatarUrl.trim() !== '') {
+                avatarImg.src = settings.avatarUrl.trim();
+                avatarImg.classList.remove('hidden');
+                avatarPlaceholder.classList.add('hidden');
+            } else {
+                handleMissingAvatar();
+            }
+
+            // Portada tarjeta destacada
+            const coverImg = document.getElementById('featured-cover-img');
+            const coverPlaceholder = document.getElementById('featured-cover-placeholder');
+            if (settings.coverUrl && settings.coverUrl.trim() !== '') {
+                coverImg.src = settings.coverUrl.trim();
+                coverImg.classList.remove('hidden');
+                coverPlaceholder.classList.add('hidden');
+            } else {
+                handleMissingCover();
+            }
+
+            // Actualizar textos de la llave Nu Colombia (@bca414)
+            const nuKey = (settings.nuKey || '@bca414').trim();
+            document.querySelectorAll('.js-nu-key-label').forEach(el => {
+                el.textContent = nuKey;
+            });
+            document.querySelectorAll('.js-copy-btn-label').forEach(el => {
+                el.textContent = `Copiar llave ${nuKey}`;
+            });
+
+            // Inputs del panel de configuración del pie de página
+            document.getElementById('set-nukey').value = nuKey;
+            document.getElementById('set-email').value = settings.email || 'brillythnicol3@gmail.com';
+
+            renderWeeklyOverview();
+            renderBookingSubjects();
+            renderBookingDates();
+            renderBookingTimes();
+            renderPaymentSelect();
+        }
+
+        // Vista previa rápida de horarios libres esta semana (16 - 22 Nov 2026)
+        function renderWeeklyOverview() {
+            const container = document.getElementById('weekly-overview-list');
+            container.innerHTML = '';
+
+            const weekDays = [
+                { key: '2026-11-16', label: 'Lunes 16 Nov' },
+                { key: '2026-11-17', label: 'Martes 17 Nov' },
+                { key: '2026-11-18', label: 'Miércoles 18 Nov' },
+                { key: '2026-11-19', label: 'Jueves 19 Nov' },
+                { key: '2026-11-20', label: 'Viernes 20 Nov' },
+                { key: '2026-11-21', label: 'Sábado 21 Nov' },
+                { key: '2026-11-22', label: 'Domingo 22 Nov' }
+            ];
+
+            weekDays.forEach(item => {
+                const slots = getAvailableSlotsForDateKey(item.key);
+                const row = document.createElement('div');
+                row.className = 'bg-[#FFFDFB] p-2.5 rounded-xl border border-[#DFD3C8]';
+
+                const pillsHtml = slots.map(t => `
+                    <button type="button" onclick="quickSelectDateAndTime('${item.key}', '${t}')" class="px-2.5 py-1 rounded-lg bg-[#EFE7DF] hover:bg-[#B88B74] text-[#3D2E27] hover:text-white text-[11px] font-semibold transition-colors cursor-pointer">
+                        ${formatTime12h(t)}
+                    </button>
+                `).join('');
+
+                row.innerHTML = `
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-xs font-bold text-[#3D2E27]">${item.label}</span>
+                        <span class="text-[10px] font-medium text-[#8C6D5E]">${slots.length} ${slots.length === 1 ? 'cupo' : 'cupos'}</span>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                        ${pillsHtml}
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function quickSelectDateAndTime(dateKey, time24) {
+            selectedDateKey = dateKey;
+            selectedTime24 = time24;
+            renderBookingDates();
+            renderBookingTimes();
+            openModal('booking-modal');
+        }
+
+        // Control de Modales y Acordeones
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        ['booking-modal', 'payment-modal'].forEach(id => {
+            document.getElementById(id).addEventListener('click', (e) => {
+                if (e.target.id === id) closeModal(id);
+            });
+        });
+
+        function toggleAccordion(contentId, chevronId) {
+            const content = document.getElementById(contentId);
+            const chevron = document.getElementById(chevronId);
+            const isHidden = content.classList.contains('hidden');
+            if (isHidden) {
+                content.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
+        // Renderizar materias en el modal de agendamiento
+        function renderBookingSubjects() {
+            const container = document.getElementById('booking-subjects-list');
+            container.innerHTML = '';
+
+            TUTORING_SUBJECTS.forEach((subj, idx) => {
+                const active = idx === selectedSubjectIndex;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `w-full px-3.5 py-2.5 rounded-xl border text-left flex items-center justify-between gap-2 transition-all cursor-pointer ${
+                    active ? 'bg-[#EFE7DF] border-[#B88B74] text-[#3D2E27]' : 'bg-[#FFFDFB] border-[#DFD3C8] text-[#59453B] hover:border-[#B88B74]'
+                }`;
+                btn.innerHTML = `
+                    <span class="text-xs font-semibold leading-snug">${subj.shortName}</span>
+                    <span class="shrink-0 font-bold text-xs ${active ? 'text-[#8C6D5E]' : 'text-[#3D2E27]'}">${formatCOP(subj.price)}/h</span>
+                `;
+                btn.onclick = () => {
+                    selectedSubjectIndex = idx;
+                    renderBookingSubjects();
+                    renderPaymentSelect();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // Renderizar selector horizontal de días
+        function renderBookingDates() {
+            const row = document.getElementById('booking-dates-row');
+            const monthLabel = document.getElementById('booking-month-label');
+            row.innerHTML = '';
+
+            const daysShort = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+            const dates = getBookableDates();
+            const currentObj = parseDateKey(selectedDateKey);
+            monthLabel.textContent = `${months[currentObj.getMonth()]} ${currentObj.getFullYear()}`;
+
+            dates.forEach(d => {
+                const key = toDateKey(d);
+                const isSel = key === selectedDateKey;
+                const slots = getAvailableSlotsForDateKey(key);
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `shrink-0 w-14 py-2.5 rounded-2xl border flex flex-col items-center justify-center transition-all cursor-pointer ${
+                    isSel ? 'bg-[#3D2E27] border-[#3D2E27] text-[#FAF6F2] shadow-sm' : 'bg-[#FFFDFB] border-[#DFD3C8] text-[#59453B] hover:border-[#B88B74]'
+                }`;
+                btn.innerHTML = `
+                    <span class="text-[10px] font-medium ${isSel ? 'text-[#E6D7CC]' : 'text-[#8C6D5E]'}">${daysShort[d.getDay()]}</span>
+                    <span class="font-bold text-sm mt-0.5">${d.getDate()}</span>
+                    <span class="text-[9px] mt-0.5 ${isSel ? 'text-[#E6D7CC]' : 'text-[#9E877B]'}">${slots.length}h</span>
+                `;
+                btn.onclick = () => {
+                    selectedDateKey = key;
+                    const newSlots = getAvailableSlotsForDateKey(key);
+                    if (!newSlots.includes(selectedTime24)) {
+                        selectedTime24 = newSlots[0] || '';
+                    }
+                    renderBookingDates();
+                    renderBookingTimes();
+                };
+                row.appendChild(btn);
+            });
+        }
+
+        // Renderizar horas libres del día seleccionado
+        function renderBookingTimes() {
+            const grid = document.getElementById('booking-times-grid');
+            const countLabel = document.getElementById('booking-slots-count');
+            grid.innerHTML = '';
+
+            const slots = getAvailableSlotsForDateKey(selectedDateKey);
+            countLabel.textContent = `${slots.length} ${slots.length === 1 ? 'hora libre' : 'horas libres'}`;
+
+            if (slots.length === 0) {
+                grid.innerHTML = `<p class="col-span-3 text-xs text-[#8C6D5E] bg-[#FFFDFB] p-3 rounded-xl border border-[#DFD3C8] text-center">No hay horas disponibles este día.</p>`;
+                return;
+            }
+
+            if (!slots.includes(selectedTime24)) {
+                selectedTime24 = slots[0];
+            }
+
+            slots.forEach(time24 => {
+                const isSel = selectedTime24 === time24;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `py-2.5 px-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+                    isSel ? 'bg-[#B88B74] border-[#B88B74] text-white shadow-xs' : 'bg-[#FFFDFB] border-[#DFD3C8] text-[#3D2E27] hover:border-[#B88B74]'
+                }`;
+                btn.textContent = formatTime12h(time24);
+                btn.onclick = () => {
+                    selectedTime24 = time24;
+                    renderBookingTimes();
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        // Generar URL real de Google Calendar (https://calendar.google.com/calendar/render?action=TEMPLATE...)
+        function createGCalLink(booking) {
+            const [y, m, d] = booking.dateKey.split('-').map(Number);
+            const [hh, mm] = booking.time24.split(':').map(Number);
+
+            const start = new Date(y, m - 1, d, hh, mm, 0);
+            const end = new Date(start.getTime() + 60 * 60 * 1000); // Sesión de 1 hora
+
+            const fmt = (dt) => {
+                const p = (n) => String(n).padStart(2, '0');
+                return `${dt.getFullYear()}${p(dt.getMonth() + 1)}${p(dt.getDate())}T${p(dt.getHours())}${p(dt.getMinutes())}00`;
+            };
+
+            const nuKey = (settings.nuKey || '@bca414').trim();
+            const title = encodeURIComponent(`Tutoría Química (@nic.labstyle) - ${booking.subject.shortName} - ${booking.name}`);
+            const details = encodeURIComponent(
+                `Clase Virtual de Química con @nic.labstyle\n` +
+                `• Estudiante: ${booking.name} (${booking.igHandle})\n` +
+                `• Materia: ${booking.subject.name}\n` +
+                `• Tema a repasar: ${booking.topic}\n` +
+                `• Modalidad: Google Meet (Virtual)\n` +
+                `• Valor: ${formatCOP(booking.subject.price)} COP / hora\n` +
+                `• Pago directo Nu Colombia (Llave Bre-B): ${nuKey} ($0 comisión desde cualquier banco)\n\n` +
+                `Importante: Envía tu comprobante de transferencia por DM a @nic.labstyle en Instagram para confirmar el cupo.`
+            );
+            const loc = encodeURIComponent('Google Meet (Virtual)');
+            const guestEmail = (settings.email || 'brillythnicol3@gmail.com').trim();
+            const guestParam = guestEmail ? `&add=${encodeURIComponent(guestEmail)}` : '';
+
+            return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${fmt(start)}/${fmt(end)}&details=${details}&location=${loc}&ctz=America/Bogota${guestParam}`;
+        }
+
+        document.getElementById('booking-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!selectedTime24) {
+                showToast('Elige un horario', 'Selecciona una hora disponible para continuar.');
+                return;
+            }
+
+            const subject = TUTORING_SUBJECTS[selectedSubjectIndex];
+            const name = document.getElementById('bk-name').value.trim();
+            let igHandle = document.getElementById('bk-ig').value.trim();
+            if (igHandle && !igHandle.startsWith('@')) igHandle = '@' + igHandle;
+            const topic = document.getElementById('bk-topic').value.trim();
+
+            const dateObj = parseDateKey(selectedDateKey);
+            const dateStr = dateObj.toLocaleDateString('es-CO', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'short'
+            });
+
+            currentBooking = {
+                subject,
+                name,
+                igHandle,
+                topic,
+                dateKey: selectedDateKey,
+                dateStr,
+                time24: selectedTime24,
+                time12: formatTime12h(selectedTime24)
+            };
+
+            const gcalUrl = createGCalLink(currentBooking);
+
+            document.getElementById('bk-success-summary').textContent =
+                `${dateStr} • ${currentBooking.time12} (${subject.shortName})`;
+            document.getElementById('bk-success-price').textContent = `${formatCOP(subject.price)} COP`;
+            document.getElementById('bk-gcal-link').href = gcalUrl;
+
+            const successPanel = document.getElementById('booking-success-panel');
+            successPanel.classList.remove('hidden');
+            lucide.createIcons();
+
+            // Abrir Google Calendar automáticamente en pestaña nueva y mostrar confirmación
+            window.open(gcalUrl, '_blank', 'noopener,noreferrer');
+            showToast('¡Google Calendar abierto!', `Transfiere ${formatCOP(subject.price)} a ${(settings.nuKey || '@bca414').trim()}.`);
+            successPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Copiado seguro al portapapeles de la llave Nu Colombia @bca414
+        function copyNuKey(btnElement) {
+            const nuKey = (settings.nuKey || '@bca414').trim();
+            const el = document.createElement('textarea');
+            el.value = nuKey;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            showToast(`¡Llave ${nuKey} copiada!`, 'Pégala en tu app Nu, Nequi o banco para transferir sin comisión.');
+
+            if (btnElement) {
+                const labelSpan = btnElement.querySelector('.js-copy-btn-label');
+                if (labelSpan) {
+                    labelSpan.textContent = `¡Llave ${nuKey} copiada!`;
+                    setTimeout(() => {
+                        labelSpan.textContent = `Copiar llave ${nuKey}`;
+                    }, 2600);
+                }
+            }
+        }
+
+        // Selector de valor en Modal de Pago Nu Colombia
+        function renderPaymentSelect() {
+            const select = document.getElementById('pay-subject-select');
+            select.innerHTML = '';
+            TUTORING_SUBJECTS.forEach((subj, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${subj.shortName} — ${formatCOP(subj.price)} COP / h`;
+                if (idx === selectedSubjectIndex) opt.selected = true;
+                select.appendChild(opt);
+            });
+            updatePaymentModalAmount();
+        }
+
+        function updatePaymentModalAmount() {
+            const idx = Number(document.getElementById('pay-subject-select').value) || 0;
+            selectedSubjectIndex = idx;
+            const subj = TUTORING_SUBJECTS[idx];
+            document.getElementById('pay-amount-display').textContent = `${formatCOP(subj.price)} COP`;
+        }
+
+        function copyReceiptSummaryText() {
+            const subj = TUTORING_SUBJECTS[selectedSubjectIndex];
+            const nuKey = (settings.nuKey || '@bca414').trim();
+            let msg = `¡Hola @nic.labstyle! Acabo de realizar mi transferencia a tu llave Nu Colombia (${nuKey}) para la tutoría virtual de Química:\n`;
+            if (currentBooking) {
+                msg += `• Estudiante: ${currentBooking.name} (${currentBooking.igHandle})\n` +
+                       `• Materia: ${currentBooking.subject.shortName}\n` +
+                       `• Fecha y hora: ${currentBooking.dateStr} a las ${currentBooking.time12}\n` +
+                       `• Tema: ${currentBooking.topic}\n` +
+                       `• Valor transferido: ${formatCOP(currentBooking.subject.price)} COP\n` +
+                       `Aquí te adjunto el comprobante para confirmar mi cupo.`;
+            } else {
+                msg += `• Materia: ${subj.shortName}\n` +
+                       `• Valor transferido: ${formatCOP(subj.price)} COP\n` +
+                       `Aquí te adjunto el comprobante para confirmar mi hora.`;
+            }
+
+            const el = document.createElement('textarea');
+            el.value = msg;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            showToast('Resumen copiado', 'Pégalo en el DM de @nic.labstyle junto a tu comprobante.');
+        }
+
+        // Guardar y restaurar ajustes del pie de página
+        document.getElementById('settings-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            let rawKey = document.getElementById('set-nukey').value.trim() || '@bca414';
+            if (!rawKey.startsWith('@')) rawKey = '@' + rawKey;
+
+            settings = {
+                ...settings,
+                nuKey: rawKey,
+                email: document.getElementById('set-email').value.trim() || 'brillythnicol3@gmail.com'
+            };
+
+            saveSettingsToStorage();
+            applySettingsToDOM();
+            showToast('Cambios guardados', `Llave Nu ${rawKey} y correo actualizados.`);
+        });
+
+        function resetSettings() {
+            settings = { ...DEFAULT_SETTINGS };
+            localStorage.removeItem(STORAGE_KEY);
+            applySettingsToDOM();
+            showToast('Restaurado', 'Se restablecieron los valores originales.');
+        }
+
+        // Exportar archivo index.html autónomo con tus fotos en Base64 listas para Netlify o Vercel
+        function exportStandaloneHTML() {
+            try {
+                const docClone = document.documentElement.cloneNode(true);
+
+                // Cerrar modales y acordeones en el archivo descargado
+                ['booking-modal', 'payment-modal'].forEach(id => {
+                    const m = docClone.querySelector(`#${id}`);
+                    if (m) {
+                        m.classList.add('hidden');
+                        m.classList.remove('flex');
+                    }
+                });
+                const ownerPanel = docClone.querySelector('#owner-panel-content');
+                if (ownerPanel) ownerPanel.classList.add('hidden');
+
+                // Incrustar directamente el src de ambas imágenes en el DOM clonado
+                const avatarClone = docClone.querySelector('#profile-avatar-img');
+                if (avatarClone && settings.avatarUrl) {
+                    avatarClone.setAttribute('src', settings.avatarUrl);
+                    avatarClone.classList.remove('hidden');
+                }
+                const coverClone = docClone.querySelector('#featured-cover-img');
+                if (coverClone && settings.coverUrl) {
+                    coverClone.setAttribute('src', settings.coverUrl);
+                    coverClone.classList.remove('hidden');
+                }
+
+                // Incrustar el estado actual de settings en DEFAULT_SETTINGS
+                const serializedSettings = JSON.stringify(settings, null, 12);
+                let htmlContent = '<!DOCTYPE html>\n' + docClone.outerHTML;
+                htmlContent = htmlContent.replace(
+                    /const DEFAULT_SETTINGS = \{[\s\S]*?\n        \};/,
+                    `const DEFAULT_SETTINGS = ${serializedSettings};`
+                );
+
+                const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'index.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showToast('Archivo descargado', 'Tu index.html listo con fotos incrustadas está en Descargas.');
+            } catch (err) {
+                console.error(err);
+                showToast('Error al exportar', 'Intenta nuevamente después de guardar tus fotos.');
+            }
+        }
+
+        // Inicialización al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
